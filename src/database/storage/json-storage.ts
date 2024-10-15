@@ -6,7 +6,7 @@ export class JsonStorage {
     private filePath: string;
 
     constructor(fileName: string) {
-        this.filePath = path.join(__dirname, "..", "..", `${fileName}.json`);
+        this.filePath = path.join(process.cwd(), "storage", `${fileName}.json`);
     }
 
     readData(): Record<string, IRecord[]> {
@@ -16,6 +16,9 @@ export class JsonStorage {
     }
 
     writeData(data: Record<string, IRecord[]>): void {
+        const directoryPath = path.dirname(this.filePath);
+        fs.mkdirSync(directoryPath, { recursive: true });
+
         fs.writeFileSync(this.filePath, JSON.stringify(data, null, 2), "utf8");
     }
 }

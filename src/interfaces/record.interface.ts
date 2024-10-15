@@ -1,4 +1,4 @@
 export interface IRecord {
-    id: string;
+    _uuid: string;
     [key: string]: any;
 }

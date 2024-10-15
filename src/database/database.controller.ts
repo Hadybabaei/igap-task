@@ -1,6 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query } from "@nestjs/common";
 import { DatabaseService } from "./database.service";
 import { IRecord } from "src/interfaces/record.interface";
+import {randomUUID} from "crypto"
 
 @Controller()
 export class DatabaseController {
@@ -8,7 +9,8 @@ export class DatabaseController {
 
     @Post("/create")
     public createTable(@Body("tableName") tableName: string) {
-        return this.databaseService.createTable(tableName);
+         this.databaseService.createTable(tableName);
+         return {Message:"table created"}
     }
 
     @Get("/:tableName")
@@ -27,7 +29,11 @@ export class DatabaseController {
 
     @Post("/:tableName")
     public insertRecord(@Param("tableName") tableName: string, @Body() record: IRecord) {
-        return this.databaseService.insertRecord(tableName, record);
+        const paylad = {
+            _uuid : randomUUID(),
+            ...record
+        }
+         this.databaseService.insertRecord(tableName, paylad);
     }
 
     @Put("/:tableName/:id")
@@ -36,16 +42,16 @@ export class DatabaseController {
         @Param("id") id: string,
         @Body() updatedRecord: Partial<IRecord>
     ) {
-        return this.databaseService.updateRecord(tableName, id, updatedRecord);
+         this.databaseService.updateRecord(tableName, id, updatedRecord);
     }
 
     @Delete("/:tableName/:id")
     public deleteRecord(@Param("tableName") tableName: string, @Param("id") id: string) {
-        return this.databaseService.deleteRecord(tableName, id);
+         this.databaseService.deleteRecord(tableName, id);
     }
 
     @Delete("/:tableName")
     public deleteTable(@Param("tableName") tableName: string) {
-        return this.databaseService.deleteTable(tableName);
+         this.databaseService.deleteTable(tableName);
     }
 }
